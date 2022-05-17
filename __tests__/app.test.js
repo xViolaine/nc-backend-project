@@ -54,8 +54,54 @@ describe("GET /api/reviews/:review_id", () => {
     });
 })
 
-describe("Error Handling", () => {
-    test("status code 404, responds with an error message when the path doesn't exist", () => {
+describe("PATCH /api/reviews/:review_id", () => {
+    test("status code 200, responds with the updated review", () => {
+        const newVote = { inc_votes: 20 };
+        return request(app)
+            .patch('/api/reviews/2')
+            .send(newVote)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.review).toEqual({
+                    review_id: 2,
+                    title: 'Jenga',
+                    designer: 'Leslie Scott',
+                    owner: 'philippaclaire9',
+                    review_img_url:
+                        'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                    review_body: 'Fiddly fun for all the family',
+                    category: 'dexterity',
+                    created_at: new Date(1610964101251).toISOString(),
+                    votes: 25
+                })
+            })
+    })
+
+    test("status code 200, responds with the updated review", () => {
+        const newVote = { inc_votes: -20 };
+        return request(app)
+            .patch('/api/reviews/2')
+            .send(newVote)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.review).toEqual({
+                    review_id: 2,
+                    title: 'Jenga',
+                    designer: 'Leslie Scott',
+                    owner: 'philippaclaire9',
+                    review_img_url:
+                        'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                    review_body: 'Fiddly fun for all the family',
+                    category: 'dexterity',
+                    created_at: new Date(1610964101251).toISOString(),
+                    votes: -15
+                })
+            })
+    })
+})
+
+describe("Error Handling General", () => {
+    test("task 3: status code 404, responds with an error message when the path doesn't exist", () => {
         return request(app)
             .get('/api/notanurl')
             .expect(404)
@@ -63,8 +109,10 @@ describe("Error Handling", () => {
                 expect(body.msg).toBe("This page doesn't exist!");
             });
     })
+})
 
-    test("status code 404, responds with an error message when the path doesn't exist", () => {
+describe("Error Handling /api/reviews/:review_id", () => {
+    test("task 4: status code 404, responds with an error message when the path doesn't exist", () => {
         return request(app)
             .get('/api/reviews/9999')
             .expect(404)
@@ -73,7 +121,7 @@ describe("Error Handling", () => {
             });
     })
 
-    test("status code 400, responds with an error message when the parametric endpoint isnt a number", () => {
+    test("task 4: status code 400, responds with an error message when the parametric endpoint isnt a number", () => {
         return request(app)
             .get('/api/reviews/notanumber')
             .expect(400)
@@ -81,4 +129,38 @@ describe("Error Handling", () => {
                 expect(body.msg).toBe("'notanumber' is not a valid review number!");
             });
     })
+
+    test('task 5: status code 404, responds with an error message when the number doesnt match a review ', () => {
+        const newVote = { inc_votes: 2 };
+        return request(app)
+        .patch('/api/reviews/9999')
+        .expect(404)
+        .send(newVote)
+        .then(({ body}) => {
+            expect(body.msg).toBe("This review doesn't exist!")
+        })
+    });
+
+    test('task 5: status code 400, responds with an error message when the id is not a number', () => {
+        const newVote = { inc_votes: 2 };
+        return request(app)
+        .patch('/api/reviews/iamnotanumber')
+        .expect(400)
+        .send(newVote)
+        .then(({ body}) => {
+            expect(body.msg).toBe("'iamnotanumber' is not a valid review number!")
+        })
+    });
+
+    test('task 5: status code 400, responds with an error message when the vote count is not a number', () => {
+        const newVote = { inc_votes: "string" };
+        return request(app)
+        .patch('/api/reviews/3')
+        .expect(400)
+        .send(newVote)
+        .then(({ body}) => {
+            expect(body.msg).toBe("'string' is not a valid value!")
+        })
+    });
 })
+
