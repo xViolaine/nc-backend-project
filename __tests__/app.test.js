@@ -32,6 +32,27 @@ describe("GET /api/categories", () => {
     });
 })
 
+describe("GET /api/users", () => {
+    test("status code 200, responds with an array of user objects", () => {
+        return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({ body }) => {
+                const { users } = body;
+                expect(users).toBeInstanceOf(Array);
+                expect(users).toHaveLength(4);
+                users.forEach((user) => {
+                    expect(user).toEqual(
+                        expect.objectContaining({
+                            username: expect.any(String),
+                            name: expect.any(String),
+                            avatar_url: expect.any(String)
+                        }))
+                })
+            })
+    });
+})
+
 describe("GET /api/reviews/:review_id", () => {
     test("status code 200, responds with a single matching review", () => {
         const review_id = 3;
