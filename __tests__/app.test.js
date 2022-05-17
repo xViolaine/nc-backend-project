@@ -55,7 +55,7 @@ describe("GET /api/reviews/:review_id", () => {
 })
 
 describe("PATCH /api/reviews/:review_id", () => {
-    test("status code 200, responds with the updated review", () => {
+    test("status code 200, responds with a changed vote count (increase)", () => {
         const newVote = { inc_votes: 20 };
         return request(app)
             .patch('/api/reviews/2')
@@ -77,7 +77,7 @@ describe("PATCH /api/reviews/:review_id", () => {
             })
     })
 
-    test("status code 200, responds with the updated review", () => {
+    test("status code 200, responds with a changed vote count (decrease)", () => {
         const newVote = { inc_votes: -20 };
         return request(app)
             .patch('/api/reviews/2')
