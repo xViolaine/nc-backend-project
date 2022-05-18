@@ -60,12 +60,12 @@ describe("GET /api/reviews/", () => {
             .expect(200)
             .then(({ body }) => {
                 const { reviews } = body;
-                expect( reviews ).toBeInstanceOf(Array);
+                expect(reviews).toBeInstanceOf(Array);
                 expect(reviews).toHaveLength(13);
                 expect(reviews).toBeSortedBy('created_at', { descending: true });
                 reviews.forEach((review) => {
                     expect(review).toEqual(
-                    expect.objectContaining(({
+                        expect.objectContaining(({
                             owner: expect.any(String),
                             title: expect.any(String),
                             review_id: expect.any(Number),
@@ -75,7 +75,7 @@ describe("GET /api/reviews/", () => {
                             votes: expect.any(Number),
                             comment_count: expect.any(Number)
                         })))
-                        expect({review}).toEqual(expect.not.objectContaining({ review_body: expect.anything()}))
+                    expect({ review }).toEqual(expect.not.objectContaining({ review_body: expect.anything() }))
                 })
             })
     });
@@ -124,65 +124,6 @@ describe("GET /api/reviews/:review_id", () => {
     });
 })
 
-
-
-describe("PATCH /api/reviews/:review_id", () => {
-    test("status code 200, responds with a changed vote count (increase)", () => {
-        const newVote = { inc_votes: 20 };
-        return request(app)
-            .patch('/api/reviews/2')
-            .send(newVote)
-            .expect(200)
-            .then(({ body }) => {
-                expect(body.review).toEqual({
-                    review_id: 2,
-                    title: 'Jenga',
-                    designer: 'Leslie Scott',
-                    owner: 'philippaclaire9',
-                    review_img_url:
-                        'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-                    review_body: 'Fiddly fun for all the family',
-                    category: 'dexterity',
-                    created_at: new Date(1610964101251).toISOString(),
-                    votes: 25
-                })
-            })
-    })
-
-    test("status code 200, responds with a changed vote count (decrease)", () => {
-        const newVote = { inc_votes: -20 };
-        return request(app)
-            .patch('/api/reviews/2')
-            .send(newVote)
-            .expect(200)
-            .then(({ body }) => {
-                expect(body.review).toEqual({
-                    review_id: 2,
-                    title: 'Jenga',
-                    designer: 'Leslie Scott',
-                    owner: 'philippaclaire9',
-                    review_img_url:
-                        'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-                    review_body: 'Fiddly fun for all the family',
-                    category: 'dexterity',
-                    created_at: new Date(1610964101251).toISOString(),
-                    votes: -15
-                })
-            })
-    })
-})
-
-describe("Error Handling General", () => {
-    test("task 3: status code 404, responds with an error message when the path doesn't exist", () => {
-        return request(app)
-            .get('/api/notanurl')
-            .expect(404)
-            .then(({ body }) => {
-                expect(body.msg).toBe("This page doesn't exist!");
-            });
-    })
-})
-
 describe("Error Handling /api/reviews/:review_id", () => {
     test("task 4: status code 404, responds with an error message when the path doesn't exist", () => {
         return request(app)
@@ -205,34 +146,144 @@ describe("Error Handling /api/reviews/:review_id", () => {
     test('task 5: status code 404, responds with an error message when the number doesnt match a review ', () => {
         const newVote = { inc_votes: 2 };
         return request(app)
-        .patch('/api/reviews/9999')
-        .expect(404)
-        .send(newVote)
-        .then(({ body}) => {
-            expect(body.msg).toBe("This review doesn't exist!")
-        })
+            .patch('/api/reviews/9999')
+            .expect(404)
+            .send(newVote)
+            .then(({ body }) => {
+                expect(body.msg).toBe("This review doesn't exist!")
+            })
     });
 
     test('task 5: status code 400, responds with an error message when the id is not a number', () => {
         const newVote = { inc_votes: 2 };
         return request(app)
-        .patch('/api/reviews/iamnotanumber')
-        .expect(400)
-        .send(newVote)
-        .then(({ body}) => {
-            expect(body.msg).toBe("'iamnotanumber' is not a valid review number!")
-        })
+            .patch('/api/reviews/iamnotanumber')
+            .expect(400)
+            .send(newVote)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'iamnotanumber' is not a valid review number!")
+            })
     });
 
     test('task 5: status code 400, responds with an error message when the vote count is not a number', () => {
         const newVote = { inc_votes: "string" };
         return request(app)
-        .patch('/api/reviews/3')
-        .expect(400)
-        .send(newVote)
-        .then(({ body}) => {
-            expect(body.msg).toBe("'string' is not a valid value!")
-        })
+            .patch('/api/reviews/3')
+            .expect(400)
+            .send(newVote)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'string' is not a valid value!")
+            })
     });
 })
 
+describe("GET /api/reviews/:review_id/comments", () => {
+    test("status code 200, responds with the comments for the corresponding review", () => {
+        const review_id = 3;
+        return request(app)
+            .get(`/api/reviews/${review_id}/comments`)
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(!!comments.length).toEqual(true)
+                comments.forEach((comment) => {
+                    expect(comment).toEqual(
+                        expect.objectContaining(({
+                            comment_id: expect.any(Number),
+                            body: expect.any(String),
+                            review_id: expect.any(Number),
+                            author: expect.any(String),
+                            votes: expect.any(Number),
+                            created_at: expect.any(String)
+                        })))
+                })
+            })
+    });
+
+    describe("Error Handling /api/reviews/:review_id/comments", () => {
+        test("task 9: status code 404, responds when the review doesn't yet exist", () => {
+            return request(app)
+                .get('/api/reviews/000/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe("There are no comments because this review doesn't exist!");
+                });
+        })
+    })
+
+    test("task 9: status code 400, something that is not a number is passed in", () => {
+        return request(app)
+            .get('/api/reviews/iamnotanumber/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'iamnotanumber' is not a valid review number!");
+            });
+    })
+
+    test("task 9: status code 200, review exists, but has no comments ", () => {
+        return request(app)
+            .get('/api/reviews/1/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toEqual([]);
+            });
+    })
+})
+
+
+    describe("PATCH /api/reviews/:review_id", () => {
+        test("status code 200, responds with a changed vote count (increase)", () => {
+            const newVote = { inc_votes: 20 };
+            return request(app)
+                .patch('/api/reviews/2')
+                .send(newVote)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.review).toEqual({
+                        review_id: 2,
+                        title: 'Jenga',
+                        designer: 'Leslie Scott',
+                        owner: 'philippaclaire9',
+                        review_img_url:
+                            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                        review_body: 'Fiddly fun for all the family',
+                        category: 'dexterity',
+                        created_at: new Date(1610964101251).toISOString(),
+                        votes: 25
+                    })
+                })
+        })
+
+        test("status code 200, responds with a changed vote count (decrease)", () => {
+            const newVote = { inc_votes: -20 };
+            return request(app)
+                .patch('/api/reviews/2')
+                .send(newVote)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.review).toEqual({
+                        review_id: 2,
+                        title: 'Jenga',
+                        designer: 'Leslie Scott',
+                        owner: 'philippaclaire9',
+                        review_img_url:
+                            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                        review_body: 'Fiddly fun for all the family',
+                        category: 'dexterity',
+                        created_at: new Date(1610964101251).toISOString(),
+                        votes: -15
+                    })
+                })
+        })
+    })
+
+    describe("Error Handling General", () => {
+        test("task 3: status code 404, responds with an error message when the path doesn't exist", () => {
+            return request(app)
+                .get('/api/notanurl')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe("This page doesn't exist!");
+                });
+        })
+    })
