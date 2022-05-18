@@ -60,7 +60,7 @@ describe("GET /api/reviews/:review_id", () => {
             .get(`/api/reviews/${review_id}`)
             .expect(200)
             .then(({ body }) => {
-                expect(body.review).toEqual({
+                expect.objectContaining({
                     review_id: review_id,
                     title: 'Ultimate Werewolf',
                     review_body: "We couldn't find the werewolf!",
@@ -73,7 +73,30 @@ describe("GET /api/reviews/:review_id", () => {
                 })
             })
     });
+
+    test("status code 200, responds with a single matching review which now also contains the amount of comments the review has gotten", () => {
+        const review_id = 3;
+        return request(app)
+            .get(`/api/reviews/${review_id}`)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.review).toEqual({
+                    review_id: review_id,
+                    title: 'Ultimate Werewolf',
+                    review_body: "We couldn't find the werewolf!",
+                    designer: 'Akihisa Okui',
+                    review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                    votes: 5,
+                    category: 'social deduction',
+                    owner: 'bainesface',
+                    created_at: new Date(1610964101251).toISOString(),
+                    comment_count: 3
+                })
+            })
+    });
 })
+
+
 
 describe("PATCH /api/reviews/:review_id", () => {
     test("status code 200, responds with a changed vote count (increase)", () => {
