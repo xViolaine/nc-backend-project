@@ -124,6 +124,59 @@ describe("GET /api/reviews/:review_id", () => {
     });
 })
 
+describe("Error Handling /api/reviews/:review_id", () => {
+    test("task 4: status code 404, responds with an error message when the path doesn't exist", () => {
+        return request(app)
+            .get('/api/reviews/9999')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toEqual("This review doesn't exist!");
+            });
+    })
+
+    test("task 4: status code 400, responds with an error message when the parametric endpoint isnt a number", () => {
+        return request(app)
+            .get('/api/reviews/notanumber')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'notanumber' is not a valid review number!");
+            });
+    })
+
+    test('task 5: status code 404, responds with an error message when the number doesnt match a review ', () => {
+        const newVote = { inc_votes: 2 };
+        return request(app)
+            .patch('/api/reviews/9999')
+            .expect(404)
+            .send(newVote)
+            .then(({ body }) => {
+                expect(body.msg).toBe("This review doesn't exist!")
+            })
+    });
+
+    test('task 5: status code 400, responds with an error message when the id is not a number', () => {
+        const newVote = { inc_votes: 2 };
+        return request(app)
+            .patch('/api/reviews/iamnotanumber')
+            .expect(400)
+            .send(newVote)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'iamnotanumber' is not a valid review number!")
+            })
+    });
+
+    test('task 5: status code 400, responds with an error message when the vote count is not a number', () => {
+        const newVote = { inc_votes: "string" };
+        return request(app)
+            .patch('/api/reviews/3')
+            .expect(400)
+            .send(newVote)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'string' is not a valid value!")
+            })
+    });
+})
+
 describe("GET /api/reviews/:review_id/comments", () => {
     test("status code 200, responds with the comments for the corresponding review", () => {
         const review_id = 3;
@@ -146,6 +199,36 @@ describe("GET /api/reviews/:review_id/comments", () => {
                 })
             })
     });
+
+    describe("Error Handling /api/reviews/:review_id/comments", () => {
+        test("task 9: status code 404, responds when the review doesn't yet exist", () => {
+            return request(app)
+                .get('/api/reviews/000/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe("There are no comments because this review doesn't exist!");
+                });
+        })
+    })
+
+    test("task 9: status code 400, something that is not a number is passed in", () => {
+        return request(app)
+            .get('/api/reviews/iamnotanumber/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("'iamnotanumber' is not a valid review number!");
+            });
+    })
+
+    test("task 9: status code 200, review exists, but has no comments ", () => {
+        return request(app)
+            .get('/api/reviews/1/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toEqual([]);
+            });
+    })
+})
 
 
     describe("PATCH /api/reviews/:review_id", () => {
@@ -204,86 +287,3 @@ describe("GET /api/reviews/:review_id/comments", () => {
                 });
         })
     })
-
-    describe("Error Handling /api/reviews/:review_id", () => {
-        test("task 4: status code 404, responds with an error message when the path doesn't exist", () => {
-            return request(app)
-                .get('/api/reviews/9999')
-                .expect(404)
-                .then(({ body }) => {
-                    expect(body.msg).toEqual("This review doesn't exist!");
-                });
-        })
-
-        test("task 4: status code 400, responds with an error message when the parametric endpoint isnt a number", () => {
-            return request(app)
-                .get('/api/reviews/notanumber')
-                .expect(400)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("'notanumber' is not a valid review number!");
-                });
-        })
-
-        test('task 5: status code 404, responds with an error message when the number doesnt match a review ', () => {
-            const newVote = { inc_votes: 2 };
-            return request(app)
-                .patch('/api/reviews/9999')
-                .expect(404)
-                .send(newVote)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("This review doesn't exist!")
-                })
-        });
-
-        test('task 5: status code 400, responds with an error message when the id is not a number', () => {
-            const newVote = { inc_votes: 2 };
-            return request(app)
-                .patch('/api/reviews/iamnotanumber')
-                .expect(400)
-                .send(newVote)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("'iamnotanumber' is not a valid review number!")
-                })
-        });
-
-        test('task 5: status code 400, responds with an error message when the vote count is not a number', () => {
-            const newVote = { inc_votes: "string" };
-            return request(app)
-                .patch('/api/reviews/3')
-                .expect(400)
-                .send(newVote)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("'string' is not a valid value!")
-                })
-        });
-    })
-
-    describe("Error Handling /api/reviews/:review_id/comments", () => {
-        test("task 9: status code 404, responds when the review doesn't yet exist", () => {
-            return request(app)
-                .get('/api/reviews/000/comments')
-                .expect(404)
-                .then(({ body }) => {
-                    expect(body.msg).toBe("There are no comments because this review doesn't exist!");
-                });
-        })
-    })
-
-    test("task 9: status code 400, something that is not a number is passed in", () => {
-        return request(app)
-            .get('/api/reviews/iamnotanumber/comments')
-            .expect(400)
-            .then(({ body }) => {
-                expect(body.msg).toBe("'iamnotanumber' is not a valid review number!");
-            });
-    })
-
-    test("task 9: status code 200, review exists, but has no comments ", () => {
-        return request(app)
-            .get('/api/reviews/1/comments')
-            .expect(200)
-            .then(({ body }) => {
-                expect(body.comments).toEqual([]);
-            });
-    })
-})
