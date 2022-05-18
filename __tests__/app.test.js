@@ -53,6 +53,34 @@ describe("GET /api/users", () => {
     });
 })
 
+describe("GET /api/reviews/", () => {
+    test("status code 200, responds with an array of review objects", () => {
+        return request(app)
+            .get('/api/reviews/')
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect( reviews ).toBeInstanceOf(Array);
+                expect(reviews).toHaveLength(13);
+                expect(reviews).toBeSortedBy('created_at', { descending: true });
+                reviews.forEach((review) => {
+                    expect(review).toEqual(
+                    expect.objectContaining(({
+                            owner: expect.any(String),
+                            title: expect.any(String),
+                            review_id: expect.any(Number),
+                            category: expect.any(String),
+                            review_img_url: expect.any(String),
+                            created_at: expect.any(String),
+                            votes: expect.any(Number),
+                            comment_count: expect.any(Number)
+                        })))
+                        expect({review}).toEqual(expect.not.objectContaining({ review_body: expect.anything()}))
+                })
+            })
+    });
+})
+
 describe("GET /api/reviews/:review_id", () => {
     test("status code 200, responds with a single matching review", () => {
         const review_id = 3;

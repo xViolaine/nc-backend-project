@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllCategories, getReviewByID, patchReviewByID, getAllUsers } = require('./controllers/controller-games');
+const { getAllCategories, getReviewByID, patchReviewByID, getAllUsers, getAllReviews } = require('./controllers/controller-games');
 
 const app = express();
 
@@ -7,6 +7,7 @@ app.use(express.json());
 
 app.get('/api/categories', getAllCategories);
 app.get('/api/users', getAllUsers);
+app.get('/api/reviews', getAllReviews);
 
 app.get('/api/reviews/:review_id', getReviewByID);
 

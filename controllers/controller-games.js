@@ -1,5 +1,5 @@
 const categories = require('../db/data/test-data/categories');
-const { selectCategories, selectReviewByID, updateReviewByID, selectUsers } = require('../models/models-games');
+const { selectCategories, selectReviewByID, updateReviewByID, selectUsers, selectReviews } = require('../models/models-games');
 
 exports.getAllCategories = (req, res, next) => {
     selectCategories()
@@ -70,3 +70,11 @@ exports.getAllUsers = (req, res, next) => {
         })
         .catch(next);
 };
+
+exports.getAllReviews = (req, res, next) => {
+    selectReviews()
+    .then((reviews) => {
+        res.status(200).send({ reviews });
+    })
+    .catch(next);
+}
