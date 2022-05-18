@@ -38,7 +38,12 @@ exports.selectReviews = () => {
     ON reviews.review_id = comments.review_id
     GROUP BY reviews.review_id
     ORDER BY created_at DESC`).then((reviews) => {
-        console.log(reviews.rows)
         return reviews.rows;
+    })
+}
+
+exports.selectCommentsByID = (review_id) => {
+    return db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id]).then((comments) => {
+        return comments.rows
     })
 }
