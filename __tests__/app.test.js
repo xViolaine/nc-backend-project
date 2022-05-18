@@ -283,7 +283,6 @@ describe("GET /api/reviews/:review_id/comments", () => {
             .get('/api/reviews/1/comments')
             .expect(200)
             .then(({ body }) => {
-                console.log(body)
                 expect(body.comments).toEqual([]);
             });
     })
