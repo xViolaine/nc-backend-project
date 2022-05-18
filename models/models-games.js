@@ -7,8 +7,6 @@ exports.selectCategories = () => {
     })
 };
 
-
-
 exports.selectReviewByID = (review_id) => {
     return db.query(`SELECT reviews.*, CAST (COUNT(comments) AS INTEGER) AS comment_count
     FROM reviews
@@ -32,3 +30,15 @@ exports.selectUsers = () => {
         return users.rows;
     })
 };
+
+exports.selectReviews = () => {
+    return db.query(`SELECT reviews.owner, reviews.review_id, reviews.created_at, reviews.title, reviews.category, reviews.review_img_url, reviews.votes, CAST (COUNT(comments) AS INTEGER) AS comment_count
+    FROM reviews
+    LEFT JOIN comments
+    ON reviews.review_id = comments.review_id
+    GROUP BY reviews.review_id
+    ORDER BY created_at DESC`).then((reviews) => {
+        console.log(reviews.rows)
+        return reviews.rows;
+    })
+}
