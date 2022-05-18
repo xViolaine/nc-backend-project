@@ -65,7 +65,7 @@ describe("GET /api/reviews/", () => {
                 expect(reviews).toBeSortedBy('created_at', { descending: true });
                 reviews.forEach((review) => {
                     expect(review).toEqual(
-                        expect.objectContaining({
+                    expect.objectContaining(({
                             owner: expect.any(String),
                             title: expect.any(String),
                             review_id: expect.any(Number),
@@ -74,7 +74,8 @@ describe("GET /api/reviews/", () => {
                             created_at: expect.any(String),
                             votes: expect.any(Number),
                             comment_count: expect.any(Number)
-                        }))
+                        })))
+                        expect({review}).toEqual(expect.not.objectContaining({ review_body: expect.anything()}))
                 })
             })
     });
