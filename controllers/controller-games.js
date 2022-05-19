@@ -139,6 +139,14 @@ exports.createComment = (req, res, next) => {
           msg: "You can't add a comment here because the review doesn't exist!",
         });
       }
+
+      if (err.code === "22P02") {
+        return next({
+          status: 404,
+          msg: "Invalid Review ID!",
+        });
+      }
+
       return next(err);
     });
 };

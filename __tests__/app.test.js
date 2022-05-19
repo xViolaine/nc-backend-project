@@ -338,7 +338,7 @@ describe("Error Handling for POST /api/reviews/:review_id/comments", () => {
   });
 
   test("task 10: code 404, review id does not yet exist", () => {
-    const review_id = 333333;
+    const review_id = 33333;
     const newComment = {
       username: "mallionaire",
       body: "I like doggos :3",
@@ -366,6 +366,20 @@ describe("Error Handling for POST /api/reviews/:review_id/comments", () => {
       .send(newComment)
       .then(({ body }) => {
         expect(body.msg).toBe("This username doesn't exist!");
+      });
+  });
+
+  test("task 10: code 404, review id is not an integer", () => {
+    const newComment = {
+      username: "xViolaine",
+      body: "I like doggos :3",
+    };
+    return request(app)
+      .post(`/api/reviews/hi/comments`)
+      .expect(404)
+      .send(newComment)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Review ID!");
       });
   });
 });
