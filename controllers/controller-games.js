@@ -123,8 +123,8 @@ exports.createComment = (req, res, next) => {
   }
 
   addComment(req.body, review_id)
-    .then((newComment) => {
-      res.status(201).send({ newComment });
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch((err) => {
       if (err.code === "23503" && err.constraint === "comments_author_fkey") {

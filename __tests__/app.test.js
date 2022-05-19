@@ -310,7 +310,7 @@ describe('"POST /api/reviews/:review_id/comments"', () => {
       .expect(201)
       .send(newComment)
       .then(({ body }) => {
-        expect(body.newComment).toEqual({
+        expect(body.comment).toEqual({
           author: "mallionaire",
           body: "I like doggos :3",
           comment_id: 7,
