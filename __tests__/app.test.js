@@ -337,7 +337,7 @@ describe("Error Handling for POST /api/reviews/:review_id/comments", () => {
       });
   });
 
-  test("task 10: code 400, body does not contain both mandatory keys", () => {
+  test("task 10: code 404, review id does not yet exist", () => {
     const review_id = 333333;
     const newComment = {
       username: "mallionaire",
@@ -348,7 +348,9 @@ describe("Error Handling for POST /api/reviews/:review_id/comments", () => {
       .expect(404)
       .send(newComment)
       .then(({ body }) => {
-        expect(body.msg).toBe("You can't add a comment here because the review doesn't exist!");
+        expect(body.msg).toBe(
+          "You can't add a comment here because the review doesn't exist!"
+        );
       });
   });
 
