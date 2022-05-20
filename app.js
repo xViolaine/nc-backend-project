@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllCategories, getReviewByID, patchReviewByID, getAllUsers, getAllReviews, getCommentsByID, createComment } = require('./controllers/controller-games');
+const { getAllCategories, getReviewByID, patchReviewByID, getAllUsers, getAllReviews, getCommentsByID, createComment, deleteCommentByID } = require('./controllers/controller-games');
 
 const app = express();
 
@@ -17,6 +17,8 @@ app.get('/api/reviews/:review_id/comments', getCommentsByID);
 app.post('/api/reviews/:review_id/comments', createComment);
 
 app.patch('/api/reviews/:review_id', patchReviewByID);
+
+app.delete('/api/comments/:comment_id', deleteCommentByID);
 
 app.all('/*', (req, res) => {
     res.status(404).send({ msg: "This page doesn't exist!" })

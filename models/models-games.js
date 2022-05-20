@@ -84,10 +84,18 @@ exports.selectCommentsByID = (review_id) => {
 
 exports.addComment = (newComment, review_id) => {
     const { username, body } = newComment;
-    return db
-        .query(
-            `INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING *`,
-            [username, body, review_id]
-        )
-        .then(({ rows }) => rows[0]);
+    return db.query(`INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING *`, [username, body, review_id]).then(({ rows }) => rows[0]);
 };
+
+exports.removeCommentByID = (comment_id) => {
+    return db.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id]).then((comment) => {
+        return comment.rows[0]
+    })
+}
+
+exports.selectCommentByID = (comment_id) => {
+        return db.query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id]).then((comment) => {
+            console.log(comment.rows)
+            return comment.rows[0]
+        })
+}
