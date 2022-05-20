@@ -80,8 +80,15 @@ exports.getAllUsers = (req, res, next) => {
 };
 
 exports.getAllReviews = (req, res, next) => {
-  selectReviews()
+  const { sort_by, order, category } = req.query;
+      selectReviews(sort_by, order, category)
     .then((reviews) => {
+      if (reviews.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Category not found",
+        })
+      }
       res.status(200).send({ reviews });
     })
     .catch(next);

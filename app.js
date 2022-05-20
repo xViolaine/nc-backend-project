@@ -7,7 +7,9 @@ app.use(express.json());
 
 app.get('/api/categories', getAllCategories);
 app.get('/api/users', getAllUsers);
+
 app.get('/api/reviews', getAllReviews);
+
 
 app.get('/api/reviews/:review_id', getReviewByID);
 app.get('/api/reviews/:review_id/comments', getCommentsByID);
