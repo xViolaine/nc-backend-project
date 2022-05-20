@@ -66,7 +66,6 @@ describe("GET /api/reviews/", () => {
                 expect(reviews).toHaveLength(13);
                 expect(reviews).toBeSorted({ descending: true });
                 expect(reviews).toBeSortedBy("created_at", { coerce: true })
-                // expect(reviews).toBeSortedBy("created_at", { descending: true });
                 reviews.forEach((review) => {
                     expect(review).toEqual(
                         expect.objectContaining({
@@ -495,6 +494,35 @@ test("task 11: status code 400, user tries to enter a non-existent category", ()
                 .send(newComment)
                 .then(({ body }) => {
                     expect(body.msg).toBe("Invalid Review ID!");
+                });
+        });
+    });
+
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('task 12: status 204, responds with an empty response body', () => {
+            return request(app)
+                .delete("/api/comments/1").expect(204);
+        });
+    
+        test('task 12: status 404, comment_id in path doesnt exist', () => {
+            return request(app)
+                .delete("/api/comments/333")
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe(
+                        "This comment doesn't exist!"
+                    );
+                });
+        });
+    
+        test('task 12: status 404, comment_id is not a number', () => {
+            return request(app)
+                .delete("/api/comments/hi")
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe(
+                        "Invalid Comment ID!"
+                    );
                 });
         });
     });

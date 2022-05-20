@@ -1,4 +1,3 @@
-const categories = require("../db/data/test-data/categories");
 const {
   selectCategories,
   selectReviewByID,
@@ -7,6 +6,8 @@ const {
   selectReviews,
   selectCommentsByID,
   addComment,
+  removeCommentByID,
+  selectCommentByID,
 } = require("../models/models-games");
 
 exports.getAllCategories = (req, res, next) => {
@@ -124,9 +125,9 @@ exports.createComment = (req, res, next) => {
   const { review_id } = req.params;
   if (typeof req.body.username !== "string" || typeof req.body.body !== "string") {
     return next({
-        status: 400,
-        msg: `Body doesn't contain mandatory keys`,
-      });
+      status: 400,
+      msg: `Body doesn't contain mandatory keys`,
+    });
   }
 
   addComment(req.body, review_id)
@@ -156,4 +157,31 @@ exports.createComment = (req, res, next) => {
 
       return next(err);
     });
+};
+
+exports.deleteCommentByID = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  if (isNaN(comment_id)) {
+    return next({
+      status: 404,
+      msg: `Invalid Comment ID!`,
+    });
+  }
+  selectCommentByID(comment_id)
+    .then((comment) => {
+      if (!comment) {
+        return Promise.reject({
+          status: 404,
+          msg: `This comment doesn't exist!`,
+        })
+      }
+      return comment
+    })
+    .then(() => {
+      removeCommentByID(comment_id).then(() => {
+        res.status(204).send();
+      });
+    })
+    .catch(next);
 };
