@@ -1,5 +1,7 @@
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Press+Start+2P&size=13&duration=4200&color=31F73C&vCenter=true&multiline=true&lines=GLHF+Gaming;A+RESTful+API+%F0%9F%98%B4+by+xViolaine)](https://git.io/typing-svg)
 
+### 📝 ABOUT THE PROJECT
+
 This API is intended to serve data for a future front-end project, the culmination of which will be a fully functioning website!
 
 Users will be able to post reviews on given topics, as well as joining discussions by commenting on them. A 'vote' feature allows users to quickly show whether they liked or disliked a review. Further functionalities are already planned, including creating topics, voting on comment, and much more!
@@ -16,15 +18,14 @@ $ code .
 
 ### ✔️ 2. INSTALL DEPENDENCIES
 ![NPM](https://img.shields.io/badge/NPM-%23000000.svg?style=for-the-badge&logo=npm&logoColor=white)
-```
+```programming
 $ npm install
 ```
 
 ### ✔️ 3. DOTENV
-<img height=25 width=60 src="https://github.com/ZanClifton/shrelly-mail-api/blob/main/env.png">
 
 In order for you to be able to run this project locally you will need to create 2 files in the main directory:
-```
+```programming
 .env.development
 .env.test
 ```
@@ -34,7 +35,7 @@ You can refer to the ``` .env-example ``` file to see how the files should look,
 
 ``` .env.development ``` should contain the following:
 ```
-PGDATABASE=nc_news
+PGDATABASE=nc_games
 ```
 
 and ``` .env.test ``` should contain the following:
