@@ -15,8 +15,6 @@ Users will be able to post reviews on given topics, as well as joining discussio
 Terminal Commands:
 ```
 $ git clone https://github.com/xViolaine/nc-backend-project.git
-$ cd nc-backend-project
-$ code .
 ```
 
 ![rainbow-divider](https://github.com/xViolaine/nc-backend-project/blob/main/rainbow.png?raw=true)
@@ -24,7 +22,7 @@ $ code .
 ### ✔️ 2. INSTALL DEPENDENCIES
 ![NPM](https://img.shields.io/badge/NPM-%23000000.svg?style=for-the-badge&logo=npm&logoColor=white)
 ```programming
-$ npm install
+$ npm ci
 ```
 
 ![rainbow-divider](https://github.com/xViolaine/nc-backend-project/blob/main/rainbow.png?raw=true)
