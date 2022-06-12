@@ -1,5 +1,4 @@
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Press+Start+2P&size=13&duration=4200&color=31F73C&vCenter=true&multiline=true&lines=GLHF+Gaming;A+RESTful+API+%F0%9F%98%B4+by+xViolaine)](https://git.io/typing-svg)
-
 ![rainbow-divider](https://github.com/xViolaine/nc-backend-project/blob/main/rainbow.png?raw=true)
 
 ### 📝 ABOUT THE PROJECT
