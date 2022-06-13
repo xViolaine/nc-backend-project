@@ -2,8 +2,10 @@ const express = require('express');
 const { getAllCategories, getReviewByID, patchReviewByID, getAllUsers, getAllReviews, getCommentsByID, createComment, deleteCommentByID
 } = require('./controllers/controller-games');
 const endpoints = require('./endpoints.json')
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
