@@ -15,8 +15,7 @@ exports.selectReviewByID = (review_id) => {
     LEFT JOIN comments
     ON reviews.review_id = comments.review_id
     WHERE reviews.review_id = $1
-    GROUP BY reviews.review_id
-    ORDER BY created_at DESC`,
+    GROUP BY reviews.review_id`,
             [review_id]
         )
         .then((review) => {
@@ -77,7 +76,7 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
 
 exports.selectCommentsByID = (review_id) => {
     return db
-        .query(`SELECT * FROM comments WHERE review_id = $1`, [review_id])
+        .query(`SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC`, [review_id])
         .then((comments) => {
             return comments.rows;
         });
