@@ -42,7 +42,7 @@ exports.selectUsers = () => {
 
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
     let queryValues = [];
-    const validSortBy = ["created_at", "owner", "category", "review_id"];
+    const validSortBy = ["created_at", "owner", "category", "review_id", "votes", "comment_count"];
     let queryString = `SELECT reviews.owner, reviews.review_id, reviews.created_at, reviews.title, reviews.category, reviews.review_img_url, reviews.votes, reviews.review_body, CAST (COUNT(comments) AS INTEGER) AS comment_count
     FROM reviews
     LEFT JOIN comments
